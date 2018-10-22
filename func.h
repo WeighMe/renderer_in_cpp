@@ -1,5 +1,6 @@
 #pragma once
 #pragma pack(2)
+#include "color.h"
 #include <cmath>
 #include <fstream>
 typedef unsigned char BYTE;
@@ -18,17 +19,17 @@ struct BmpFileHeader
 
 struct BmpInfoHeader
 {
-	DWORD biSize;
-	LONG biWidth;
-	LONG biHeight;
-	WORD biPlanes;
-	WORD biBitCount;
-	DWORD biCompression;
-	DWORD biSizeImage;
-	LONG biXPelsPerMeter;
-	LONG biYPelsPerMeter;
-	DWORD biClrUsed;
-	DWORD biClrImportant;
+	DWORD biSize;		  //0-3
+	LONG biWidth;		  //4-7
+	LONG biHeight;		  //8-11
+	WORD biPlanes;		  //12-13
+	WORD biBitCount;	  //14-15
+	DWORD biCompression;  //16-19
+	DWORD biSizeImage;	//20-23
+	LONG biXPelsPerMeter; //24-27
+	LONG biYPelsPerMeter; //28-31
+	DWORD biClrUsed;	  //32-35
+	DWORD biClrImportant; //36-39
 };
 
 struct RGBType
@@ -43,11 +44,17 @@ struct RGBType
 		g = g1;
 		b = b1;
 	}
+	void set(Color color)
+	{
+		r = (int)floor(color.red * 255);
+		g = (int)floor(color.green * 255);
+		b = (int)floor(color.blue * 255);
+	}
 };
 
 void saveBmp(const char *fileName, int w, int h, int dpi, RGBType *data)
 {
-	int size = 3 * w * h;
+	int size = 4 * w * h;
 
 	//设置bmpfileheader的各种数值
 	BmpFileHeader fileHeader;
